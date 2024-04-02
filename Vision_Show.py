@@ -498,7 +498,7 @@ def video_preview2():
             elif video_quality=='360p':
                 frame_width = 854
                 frame_height = 480
-            fps = 10
+            fps = 1
 
             # Create a list to store video frames
             video_frames = []
