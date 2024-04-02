@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image to Video Converter</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #cdecff;
+      background-repeat: no-repeat;
+      background-size: cover;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      animation: fadeInBackground 1s ease-in-out;
+    }
+
+    #header {
+      background-color: #002d67;
+      display: flex;
+      align-items: center;
+      margin-bottom: 2vh;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      left: 0;
+      padding: 0.8vh;
+      z-index: 1000;
+    }
+
+    #logo {
+      width: 5vw;
+      height: auto;
+      margin-right: 2vw;
+    }
+    #logo:hover {
+    transform: scale(1.1); /* Scale up the logo slightly on hover */
+    transition: transform 0.3s ease
+}
+
+.enlarge-on-hover:hover {
+    transform: scale(1.1); /* Increase the size by 10% */
+    transition: transform 0.3s ease; /* Add a smooth transition effect */
+}
+
+    .main-container {
+      width: 80vw;
+      height: 80vh;
+
+      background-repeat: no-repeat;
+      background-size: cover;
+      border-radius: 3.6vh;
+      padding: 1vh;
+      box-shadow: 0 0 2.4vh rgba(0, 0, 0, 0.5);
+      margin-top: 8.4vh;
+      position: relative;
+      background-color: #8aaee0;
+    }
+
+    .duration-container {
+      margin-bottom: .2vh;
+    }
+
+    .duration-container label {
+      color: #f6ede3;
+      font-size: 3.6vh;
+    }
+
+    .duration-container input {
+      font-size: 3.2vh;
+    }
+
+    #drop-area {
+      padding: 2.0vh;
+      text-align: center;
+      font-size: 1.5vw;
+      cursor: pointer;
+      background-color: #395886;
+      border-radius: 1vh;
+      transition: background-color 0.3s ease-in-out;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    #drop-area:hover {
+      background-color: #203590;
+      color: #fff;
+    }
+
+    .image-container {
+      position: relative;
+      margin: 1vh;
+      animation: scaleIn 0.3s ease-in-out;
+      display: inline-block;
+      vertical-align: top;
+      width: 100%;
+
+    }
+
+    .image-container img {
+      width: 100%;
+      /* max-height: 100%; */
+      border-radius: 1.2vh;
+      box-shadow: 0 0 1.8vh rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .image-preview-container {
+      width: 95%;
+      overflow-x: hidden;
+      overflow-y: auto;
+      max-height: 40vh;
+      margin-top: 1.4vh;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(20vw, 1fr));
+      grid-gap: 3.2vh;
+      justify-content: center;
+      align-items: center;
+      border: 0.4vh solid #656e77;
+      border-radius: 1.8vh;
+      padding: 3.2vh;
+      background-color: #E6E5E0;
+    }
+    
+
+    #export-btn,#delete-all-btn {
+      background-color: #6083C5;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out;
+      font-size: 2.2vh;
+      padding: 2.0vh 3.0vh;
+      border: none;
+      border-radius: 0.8vh;
+      margin-top: 1vh;
+      position: absolute;
+      bottom: 2vh;
+      right: 2vh;
+      margin-right: 3.0vh;
+    }
+
+    #export-btn:hover,#delete-all-btn:hover {
+      background-color: #203590;
+    }
+    
+
+    .delete-btn {
+      position: absolute;
+      top: 0.4vh;
+      right: 0.4vh;
+      background-color: #6083C5;
+      color: #fff;
+      border: none;
+      padding: 0.8vh 1.4vh;
+      cursor: pointer;
+      border-radius: 0.8vh;
+      transition: background-color 0.3s ease-in-out;
+    }
+
+    .delete-btn:hover {
+      background-color: #203590;
+    }
+    #reset-btn {
+  background-color: #6083C5;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  font-size: 2.2vh;
+  padding: 2.0vh 3.0vh;
+  border: none;
+  border-radius: 0.8vh;
+  margin-bottom: 1vh;
+  margin-left: 3vh; /* Adjust the left margin as needed */
+  position: absolute;
+  bottom: 2vh;
+  left: 2vh; /* Adjust the bottom and left positions as needed */
+}
+
+#reset-btn:hover {
+  background-color: #203590;
+}
+  </style>
+</head>
+
+<body>
+  <div id="header">
+    <img id="logo" src="{{url_for('static', filename='/img/logotransparent.png')}}" alt="Your Logo" />
+    <h1>VisionShow</h1>
+  </div>
+  <div class="main-container">
+    <div class="duration-container">
+      <label style="color: #f6ede3; font-size: 3.6vh;">Set image duration (in seconds):</label>
+      <input type="number" id="image-duration" value="4" onchange="updateImageDurations()"  style="font-size: 3.2vh;" />
+    </div>
+
+    <br /><br /><br />
+
+    <div id="drop-area" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
+      <p style="margin: 0; color: white">Drag & Drop images here or click to browse</p>
+      <input type="file" id="fileInput" multiple style="display: none" onchange="handleFiles(this.files);" />
+    </div>
+
+    <br /><br />
+
+    <div class="image-preview-container" id="image-preview"></div>
+    <br>
+    <button id="delete-all-btn" onclick="deleteAllImages()">Delete All</button>
+  </div>
+    <a href="#" onclick="exportData()">
+    <button id="export-btn">Export</button>
+  </a>
+  <a href="#" onclick="resetImages()">
+    <button id="reset-btn">Reset</button>
+  </a>
+  <script>
+   let default_duration_value = 2;
+let deletedImageFilenames = [];
+function base64ToBlob(base64, contentType = 'image/jpeg') {
+    const byteCharacters = atob(base64);
+    const byteArrays = [];
+
+    for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+        const slice = byteCharacters.slice(offset, offset + 512);
+
+        const byteNumbers = new Array(slice.length);
+        for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+        }
+
+        const byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
+    }
+
+    return new Blob(byteArrays, { type: contentType });
+}
+
+function updateImageDurations() {
+    const durationInputs = document.querySelectorAll(".duration-input");
+    const imageDuration = document.getElementById("image-duration").value;
+    default_duration_value = imageDuration;
+    durationInputs.forEach(durationInput => {
+        durationInput.value = imageDuration;
+    });
+}
+
+window.onload = fetchImagesFromDatabase;
+
+function dropHandler(event) {
+    event.preventDefault();
+    document.getElementById("drop-area").style.border = "2px dashed #3498db";
+    const filesInput1 = document.getElementById('fileInput').files;
+    console.log(filesInput1.length);
+    const files = event.dataTransfer.files;
+    handleFiles(files);
+}
+
+function dragOverHandler(event) {
+    event.preventDefault();
+    document.getElementById("drop-area").style.border = "2px dashed #2980b9";
+    const filesInput1 = document.getElementById('fileInput').files;
+    console.log(filesInput1.length);
+    const files = event.dataTransfer.files;
+    handleFiles(files);
+}
+
+function handleFiles(files) {
+    const preview = document.getElementById("image-preview");
+    const deleteAllBtn = document.getElementById("delete-all-btn");
+    const filesInput1 = document.getElementById('fileInput').files;
+    console.log(filesInput1.length);
+    deleteAllBtn.style.display = "block";
+    let index2 = preview.children.length;
+    for (const file of files) {
+        if (file.type.startsWith("image/")) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const imgContainer = document.createElement("div");
+                imgContainer.className = "image-container";
+                const img = document.createElement("img");
+                img.src = e.target.result;
+                const deleteBtn = document.createElement("button");
+                deleteBtn.className = "delete-btn";
+                deleteBtn.innerText = "Delete";
+                deleteBtn.addEventListener("click", function () {
+                    deletedImageFilenames.push(file.name);
+                    imgContainer.setAttribute("data-deleted", "true");
+                    imgContainer.style.display = "none"; // Hide the deleted image
+                    checkPreviewEmpty();
+                });
+                imgContainer.appendChild(img);
+                imgContainer.appendChild(deleteBtn);
+                preview.appendChild(imgContainer);
+                const checkboxContainer = document.createElement("div");
+                checkboxContainer.className = "checkbox-below-image";
+                const durationInput = document.createElement("input");
+                durationInput.type = "number";
+                durationInput.min = '1';
+                durationInput.value = document.getElementById("image-duration").value;
+                durationInput.className = "duration-input";
+                durationInput.id = `durationInput1_${index2}`;
+                checkboxContainer.appendChild(durationInput);
+
+                imgContainer.appendChild(checkboxContainer);
+                index2++;
+                preview.appendChild(imgContainer);
+                const index = deletedImageFilenames.indexOf(file.name);
+                if (index !== -1) {
+                    deletedImageFilenames.splice(index, 1);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+}
+let saveindex=0;
+function displayImagesFromDatabase(imageDataList) {
+    const preview = document.getElementById("image-preview");
+    imageDataList.forEach(imageData => {
+        const imgContainer = document.createElement("div");
+        imgContainer.className = "image-container";
+        const img = document.createElement("img");
+        img.src = `data:image/jpeg;base64, ${imageData['data']}`;
+        imgContainer.appendChild(img);
+        const durationInput = document.createElement("input");
+        durationInput.type = "number";
+        durationInput.value = imageData['imageduration'];
+        durationInput.min=imageData['imageduration'];
+        durationInput.max=imageData['imageduration'];
+        imgContainer.appendChild(durationInput);
+        preview.appendChild(imgContainer);
+        checkPreviewEmpty();
+    });
+    saveindex=preview.children.length;
+    const filesInput1 = document.getElementById('fileInput').files;
+    filesInput1.value='';
+    // console.log(filesInput1.length);
+}
+
+function fetchImagesFromDatabase() {
+    fetch('/retrieve_images')
+        .then(response => response.json())
+        .then(imageDataList => {
+            displayImagesFromDatabase(imageDataList);
+            // fetchImagesFromDatabase2();
+        })
+        .catch(error => {
+            console.error('Error fetching images:', error);
+        });
+}
+
+function exportData() {
+    const filesInput1 = document.getElementById('fileInput').files;
+    const formData = new FormData();
+    const preview = document.getElementById("image-preview");
+    
+    for (let i = 0; i < filesInput1.length; i++) {
+        const file = filesInput1[i];
+        if (!deletedImageFilenames.includes(file.name)) {
+            formData.append('files[]', file);
+        }
+        let y=i+saveindex;
+        const durationInput = document.getElementById(`durationInput1_${y}`);
+        if (durationInput) {
+            formData.append('durations[]', durationInput.value);
+        } else {
+            formData.append('durations[]', default_duration_value);
+        }
+    }
+
+    if (formData.has('files[]')) {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/upload');
+        xhr.onload = function () {
+            window.location.href = "{{ url_for('animate') }}";
+            if (xhr.status === 500) {
+                alert('Failed to upload images. Please try again later.');
+            }
+        };
+        xhr.send(formData);
+        filesInput1.value='';
+
+    } 
+    else if(preview.children.length>0)
+    {
+      window.location.href = "{{ url_for('animate') }}";
+    }
+    else {
+        alert('Please select one or more images to upload.');
+    }
+}
+
+function deleteAllImages() {
+    const preview = document.getElementById("image-preview");
+    const files = document.getElementById('fileInput');
+    files.value = '';
+    fetchImagesFromDatabase();
+    preview.innerHTML = "";
+    checkPreviewEmpty();
+}
+
+function checkPreviewEmpty() {
+    const preview = document.getElementById("image-preview");
+    const deleteAllBtn = document.getElementById("delete-all-btn");
+    deleteAllBtn.style.display = preview.children.length > 0 ? "block" : "none";
+}
+
+document.getElementById("drop-area").addEventListener("click", function () {
+    document.getElementById("fileInput").click();
+});
+function resetImages() {
+    fetch('/reset_images', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // alert('All images deleted successfully.');
+          fetchImagesFromDatabase();
+          // Reload the page or update UI as needed
+          window.location.reload(); // Reload the page
+        } else {
+          alert('Error deleting images: ' + data.error);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to delete images. Please try again later.');
+      });
+  }
+  </script>
+</body>
+
+</html>

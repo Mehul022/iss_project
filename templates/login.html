@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='/css/login.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .password-container {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            z-index: 1;
+            color: #333; /* Adjust the color of the eye icon */
+        }
+
+        .toggle-password i {
+            margin-left: -3vw;
+            font-size: 16px; /* Adjust the size as needed */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="particles-js"></div>
+        <div class="content">
+            <header>
+                <img src="{{ url_for('static', filename='/img/logotransparent.png') }}" class="logo_img" alt="Logo">
+                <h1>VisionShow</h1>
+            </header>
+        </div>
+        <div class="login-container">
+            <h2>Welcome to <span>VisionShow</span></h2>
+        </div>
+        <div class="login-container2">
+            <div>
+                <form action="{{ url_for('login_submit') }}" method="post" id="login-form">
+                    <label for="email">E-mail &nbsp; &nbsp;&nbsp; :</label>
+                    <input type="email" id="email" name="email" placeholder="Enter email" required><br>
+        
+                    
+                    <div class="password-container">
+                        <label for="password">Password :</label>
+                        <input type="password" id="password" name="password" placeholder="Enter password" required>
+                        <span class="toggle-password" onclick="togglePasswordVisibility()">
+                            <i class="far fa-eye"></i>
+                        </span>
+                    </div>
+        
+                    <button type="submit" onclick="loginWithEmail()">Login with Email</button>
+                    <a href="{{ url_for('Signup') }}"  style="color:rgb(216, 248, 248)" >Don't have an account?</a>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="{{ url_for('static', filename='/js/particles.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='/js/app.js') }}"></script>
+    <script>
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const icon = document.querySelector('.toggle-password i');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background-color: black;
+}
+
+/* Default styles */
+.login-container h2 {
+    color: white;
+    font-size: 3.5vw;
+}
+
+.login-container span {
+    background-image: linear-gradient(to right, rgb(0, 0, 226), purple, rgb(173, 154, 12), rgba(214, 30, 214, 0.795), rgb(218, 11, 245), rgb(201, 255, 192));
+    color: transparent;
+    display: inline-block;
+    background-clip: text;
+}
+
+.success-message {
+    display: none;
+    box-shadow: 1px 2px 12px 3px whitesmoke;
+    color: white;
+    text-align: center;
+    padding: 1vh;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 10px;
+    z-index: 999;
+}
+
+.login-container2 {
+    position: relative;
+    background-color: black;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-left: 35%;
+    width: 30%;
+    margin-top: 1vh;
+}
+
+header {
+    display: flex;
+    flex-direction: row;
+    color: white;
+}
+
+a:link {
+    font-size: 1.5vw;
+    text-decoration: none;
+    color: azure;
+    font-style: italic;
+}
+
+a:hover {
+    color: rgb(12, 44, 248);
+}
+
+.logo_img {
+    height: 4vw;
+    margin-top: 2vh;
+}
+
+#particles-js {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: black;
+}
+
+.content {
+    position: relative;
+}
+
+h1 {
+    color: white;
+    font-size: 2.3vw;
+}
+
+.login-container {
+    position: relative;
+    text-align: center;
+    margin-bottom: 0%;
+}
+
+#login-form {
+    padding: 1.7vw;
+    font-size: 1.5vw;
+    color: white;
+    box-shadow: 1px 2px 12px 3px whitesmoke;
+}
+
+button {
+    color: white;
+    font-size: 1.8vw;
+    background-color: #2196F3;
+    border-radius: 45px;
+    margin: 5%;
+    margin-top: 10%;
+    margin-bottom: 1%;
+    padding: 7px;
+    text-align: center;
+    width: 84%;
+    border-color: #2196F3;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #1565C0;
+    border-color: #1565C0;
+    box-shadow: 1px 2px 12px 3px wheat;
+}
+
+/* Media queries for responsive design */
+@media screen and (max-width: 768px) {
+    .login-container h2 {
+        font-size: 5vw;
+    }
+
+    .login-container2 {
+        width: 80%;
+        margin: 0 auto; /* Center the box horizontally */
+        /*  Adjust the top margin to center vertically */
+    }
+    .login-container{
+        margin-top: 15vh;
+    }
+    h1 {
+        font-size: 5vw;
+    }
+
+    #login-form {
+        font-size: 3vw;
+    }
+
+    button {
+        font-size: 4vw;
+        margin-top: 5%;
+        margin-bottom: 5%;
+    }
+}

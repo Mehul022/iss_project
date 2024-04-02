@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='/css/home-style.css')}}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="home-script.js"></script>
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo">
+            <img src="{{url_for('static', filename='/img/logotransparent.png')}}" alt="logo">
+            <a href="#">Vision Show</a>
+        </div>
+        <nav class="design_nav">
+            <!-- <img src="sitelogo.jpeg" alt="none"> -->
+            <a href="#home" style="--i:1">Home</a>
+            <a href="#upload-scroll"  style="--i:2">Upload</a>
+            <a href="#customize-scroll" style="--i:3">Customize</a>
+            <a href="#preview-scroll">Preview</a>
+            <a href="#steps-scroll" style="--i:5">Steps</a>
+            <a href="#contact" style="--i:5">Contact Us</a>
+            <a href="#" style="--i:5">{{ session['email'] }}</a>
+        </nav>
+        <div class="stylelogin">
+            <a href="{{url_for('Logout')}}" target="_blank">Logout</a>
+        </div>
+
+    </header>
+
+    <section id="home">
+        <div class="home-text">
+            <h2 style="margin-top: 20vh;">Free <span>Slideshow Maker</span></h2>
+            
+            <p style="font-family: cursive;"><span style="font-family: cursive;">Welcome to our innovative video creation platform, where creativity meets simplicity!
+                </span>Upload your
+                cherished photos effortlessly, drag and drop with ease, and explore the magic of turning memories
+                into captivating videos. Customize your creations by adding background music, setting image
+                durations, and choosing transition effects. Enjoy a real-time preview with play, pause, and rewind
+                controls to perfect your masterpiece. Tailor your output with options for resolution and quality.
+                Dive into a seamless user experience with our user-friendly login and signup pages. Unleash your
+                creativity today and bring your memories to life with our user-centric video customization platform.
+            </p>
+
+        </div>
+
+        <div style="justify-content: center; align-items: center; font-size:2vw ; margin-left: 37vw; margin-top: 8vh; margin-bottom:3vh; background-color: #EDF4F2;">
+            <a href="{{ url_for('dropbox') }}">
+                <button style="font-size: 2vw; ">Start Now</button>
+            </a>
+        </div>
+
+    </section>
+
+   
+        <h1 id="upload-scroll"  style="text-align: center; font-size: 50px; padding-bottom: 100px; background-color: #CADCFC;">Upload Images</h1>
+
+    <div class="grid-container">
+        <div class="grid-item">
+            <img src="{{url_for('static', filename='/img/grid1.jpg')}}" alt="Image 1">
+        </div>
+        <div class="grid-item">
+            <div class="right-part">
+                <div class="sliding-images">
+
+                    <img src="{{url_for('static', filename='/img/grid1.jpg')}}" alt="Image 1">
+                    <img src="{{url_for('static', filename='/img/dragdrop.png')}}" alt="Image 2">
+                    <img src="{{url_for('static', filename='/img/multipleimage.png')}}" alt="Image 3">
+
+                </div>
+            </div>
+        </div>
+        <div class="grid-item">
+            <img src="{{url_for('static', filename='/img/dragdrop.png')}}" alt="Image 3">
+        </div>
+        <div class="grid-item">
+            <img src="{{url_for('static', filename='/img/multipleimage.png')}}" alt="Image 4">
+        </div>
+    </div>
+
+    <h1  id="customize-scroll"   style="text-align: center; font-size: 50px; padding-bottom: 100px; background-color: #c0d6df;">Customize Your Video</h1>
+
+    <div  style="background-color: #c0d6df;" class="grid-container">
+        <div style="background-color: #4f6d7a;"  class="grid-item">
+            <img src="{{url_for('static', filename='/img/customize1.png')}}" alt="Image 1">
+        </div>
+        <div style="background-color: #4f6d7a;"  class="grid-item">
+            <img src="{{url_for('static', filename='/img/04_slideshow_a12748ac8c.gif')}}" alt="Image 2">
+        </div>
+        <div style="background-color: #4f6d7a;"  class="grid-item">
+            <img src="{{url_for('static', filename='/img/customize2.png')}}" alt="Image 3">
+        </div>
+        <div style="background-color: #4f6d7a;"  class="grid-item">
+            <img src="{{url_for('static', filename='/img/customize3.png')}}" alt="Image 4">
+        </div>
+    </div>
+
+    <h1  id="preview-scroll"  style="text-align: center; font-size: 50px; padding-bottom: 100px; background-color: #eff6e0;">Preview Of Video</h1>
+
+    <div  style="background-color: #eff6e0;" class="grid-container">
+        <div style="background-color: #aec3b0;"  class="grid-item">
+            <img src="{{url_for('static', filename='/img/customize1.png')}}" alt="Image 1">
+        </div>
+        <div style="background-color: #aec3b0;"  class="grid-item">
+            <img src="{{url_for('static', filename='/img/04_slideshow_a12748ac8c.gif')}}" alt="Image 2">
+        </div>
+        <div style="background-color: #aec3b0;"  class="grid-item">
+            <img src="{{url_for('static', filename='/img/customize2.png')}}" alt="Image 3">
+        </div>
+        <div style="background-color: #aec3b0;"  class="grid-item">
+            <img src="{{url_for('static', filename='/img/customize3.png')}}" alt="Image 4">
+        </div>
+    </div>
+
+    <h1  id="steps-scroll"  style="text-align: center; font-size: 50px; padding-bottom: 100px; background-color: #F6EDE3;">Steps</h1>
+
+    <div style="background-color: #F6EDE3;"  class="slider-container">
+        <div class="slider-content" id="sliderContent">
+            <img src="{{url_for('static', filename='/img/step1.png')}}" alt="Image 1">
+            <img src="{{url_for('static', filename='/img/step2.png')}}" alt="Image 1">
+            <img src="{{url_for('static', filename='/img/step3.png')}}" alt="Image 1">
+            <img src="{{url_for('static', filename='/img/step4.png')}}" alt="Image 1">
+            <img src="{{url_for('static', filename='/img/steps5.png')}}" alt="Image 1">
+            <img src="{{url_for('static', filename='/img/steps6.png')}}" alt="Image 1">
+            <img src="{{url_for('static', filename='/img/step7.png')}}" alt="Image 1">
+            <img src="{{url_for('static', filename='/img/step8.png')}}" alt="Image 1">
+        </div>
+    </div>
+
+    <footer style="background-color: #c0d6df;" id="contact">
+        <h2>Contact Us</h2>
+        <p>If you have any questions or inquiries, feel free to get in touch with us.</p>
+        <p>paarthjindal1@gmail.com</p>
+        <p>mehulagarwal@gmail.com</p>
+        <p>hitengarg@gmail.com</p>
+    </footer>
+
+    <div style="background-color: #4f6d7a;"  class="final">
+        <p>Developed by Paarth,Mehul,Hiten</p>
+    </div>
+
+    <a href="#" class="top"> <i class='bx bx-up-arrow-alt'></i></a>
+
+</body>
+
+</html>

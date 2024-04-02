@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload and Video Display</title>
+</head>
+<body>
+    <h1>Image Upload and Video Display</h1>
+    <input type="file" id="imageFile" accept="image/*" required>
+    <button id="exportButton">Export to Database</button>
+    <div id="videoContainer"></div>
+
+    <script>
+        document.getElementById('exportButton').addEventListener('click', function() {
+            var fileInput = document.getElementById('imageFile');
+            var file = fileInput.files[0];
+            
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(event) {
+                    var imageData = event.target.result;
+
+                    // Save the image data to the server
+                    saveImageData(imageData);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('Please select an image to export.');
+            }
+        });
+
+        function saveImageData(imageData) {
+            // Send the image data to the server to save in the database
+            fetch('/save_image', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ image: imageData })
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Image saved successfully, now retrieve it and create video
+                    retrieveAndDisplayVideo();
+                } else {
+                    alert('Error exporting image to database!');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function retrieveAndDisplayVideo() {
+            // Retrieve the image data from the server
+            fetch('/retrieve_image')
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.image) {
+                    // Convert the image data to video (assuming it's handled server-side)
+                    var videoSrc = data.image; // Assuming the server returns the video source
+                    // Create video element and set its source
+                    var videoElement = document.createElement('video');
+                    videoElement.src = videoSrc;
+                    videoElement.controls = true;
+                    // Append video element to the container
+                    var videoContainer = document.getElementById('videoContainer');
+                    videoContainer.innerHTML = '';
+                    videoContainer.appendChild(videoElement);
+                } else {
+                    alert('No image found in the database!');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>

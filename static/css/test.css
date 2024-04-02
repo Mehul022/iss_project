@@ -1,0 +1,195 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    font-family: "poppins", sans-serif;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 10%;
+    background: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.logo img {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+
+.logo a {
+    font-size: 1.5rem;
+    color: #190202;
+    text-decoration: none;
+}
+
+.design_nav {
+    display: flex;
+}
+
+.design_nav a {
+    font-size: 1.2rem;
+    color: #160101;
+    text-decoration: none;
+    margin-left: 20px;
+    transition: color 0.3s;
+}
+
+.design_nav a:hover {
+    color: rgb(10, 2, 240);
+}
+
+.stylelogin a {
+    display: inline-block;
+    font-size: 1rem;
+    color: #1219df;
+    text-decoration: none;
+    font-weight: 500;
+    border: 3px groove rgb(29, 41, 175);
+    border-radius: 20px;
+    padding: 8px 16px;
+    transition: background-color 0.5s, color 0.5s;
+    margin-left: 20px;
+}
+
+.stylelogin a:hover {
+    background-color: blue;
+    color: white;
+}
+
+main {
+    margin-top: 100px;
+}
+
+#home .home-text h2 {
+    text-align: center;
+    font-size: 3rem;
+}
+
+#home .home-text h2 span {
+    background-image: linear-gradient(to right, rgb(0, 0, 226), purple, rgb(173, 12, 173), rgba(214, 30, 214, 0.795), rgb(187, 16, 210), pink);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+#home .home-text p {
+    text-align: center;
+    font-size: 1.2rem;
+    margin: 20px;
+}
+
+.signup_button {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.signup_button p {
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    border: 2px solid blue;
+    border-radius: 20px;
+    color: white;
+    background-color: blue;
+    cursor: pointer;
+    transition: background-color 0.5s, color 0.5s;
+}
+
+.signup_button p:hover {
+    background-color: rgba(0, 0, 255, 0.8);
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    margin-top: 20px;
+    overflow-x: auto;
+}
+
+.grid-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+
+
+/* #steps-container {
+    display: flex;
+    overflow-x: auto;
+    margin-bottom: 20px;
+    padding: 20px;
+    justify-content: space-between;
+}
+
+.step-box {
+    flex: 0 0 auto;
+    width: 300px;
+    margin-right: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.step-count {
+    background-color: #f2f2f2;
+    border-radius: 0 0 0 5px;
+    padding: 5px 10px;
+}
+
+.step-count::after {
+    content: 'Step';
+}
+
+.step-title {
+    font-size: 1.2rem;
+    margin-top: 10px;
+}
+
+.step-content {
+    font-size: 1rem;
+    margin-top: 10px;
+} */
+
+footer {
+    margin-top: 50px;
+    text-align: center;
+}
+
+.footer-heading {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.footer-text {
+    font-size: 1.2rem;
+}
+
+.final {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px;
+    background-image: linear-gradient(to right, rgb(0, 0, 226), purple, rgb(173, 12, 173), rgba(214, 30, 214, 0.795), rgb(187, 16, 210), pink);
+    font-weight: 600;
+    text-align: center;
+    color: white;
+}

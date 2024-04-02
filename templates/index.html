@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload</title>
+    <style>
+        #drop-area {
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="drop-area" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
+        <p style="margin: 0; color: black;">Drag & Drop images here or click to browse</p>
+        <input type="file" id="fileInput" multiple style="display: none;" onchange="handleFiles(this.files);" />
+    </div>
+    
+    <script>
+        function dragOverHandler(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.dataTransfer.dropEffect = 'copy';
+        }
+
+        function dropHandler(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            var files = event.dataTransfer.files;
+            handleFiles(files);
+        }
+
+        function handleFiles(files) {
+            var formData = new FormData();
+            for (var i = 0; i < files.length; i++) {
+                formData.append('image', files[i]);
+            }
+            uploadImages(formData);
+        }
+
+        function uploadImages(formData) {
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Images uploaded successfully!');
+                } else {
+                    alert('Error uploading images!');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
+

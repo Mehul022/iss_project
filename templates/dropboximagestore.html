@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image to Video Converter</title>
+    <!-- Your CSS styles -->
+    <style>
+        body {
+          font-family: "Arial", sans-serif;
+          background-color: #3b373b;
+          color: #fff;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          height: 100vh;
+          animation: fadeInBackground 1s ease-in-out;
+        }
+  
+        #header {
+          display: flex;
+          align-items: center;
+          margin-bottom: 20px;
+          position: fixed;
+          top: 0;
+          left: 0;
+          padding: 10px;
+          z-index: 1000;
+          /* Ensure it's above other elements */
+        }
+  
+        #logo {
+          width: 50px;
+          /* Adjust the width of your logo */
+          height: auto;
+          margin-right: 10px;
+        }
+  
+        #drop-area {
+          border: 2px dashed #3b373b;
+          padding: 20px;
+          text-align: center;
+          cursor: pointer;
+          background-color: #3b373b; /* Updated background color */
+          border-radius: 10px;
+          transition: background-color 0.3s ease-in-out;
+          animation: fadeIn 1s ease-in-out;
+        }
+  
+        #drop-area:hover {
+          background-color: #656e77; /* Updated hover color */
+          border: 2px dashed #656e77; /* Updated border color on hover */
+          color: #fff;
+        }
+  
+        #image-preview {
+          margin-top: 20px;
+          display: flex;
+          overflow-x: auto; /* Enable horizontal scrolling */
+          max-width: 100%; /* Allow the div to take up the full width */
+          white-space: nowrap; /* Prevent images from wrapping to the next line */
+          animation: fadeIn 0.5s ease-in-out;
+        }
+  
+        .image-container {
+          position: relative;
+          margin: 10px;
+          animation: scaleIn 0.3s ease-in-out;
+        }
+  
+        .image-container {
+          flex: 0 0 auto; /* Prevent flex items from shrinking */
+          margin: 10px;
+          box-sizing: border-box; /* Include padding and border in the width */
+        }
+  
+        .image-container img {
+          max-width: 100%;
+          max-height: 150px; /* Set a fixed height for each image container */
+          border-radius: 8px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          transition: transform 0.3s ease-in-out;
+        }
+  
+        #export-btn {
+          background-color: #3b373b;
+          color: #fff;
+          cursor: pointer;
+          transition: background-color 0.3s ease-in-out;
+          font-size: 14px;
+          padding: 12px 18px;
+          border: none;
+          border-radius: 5px;
+          margin-top: 10px;
+        }
+  
+        #export-btn:hover {
+          background-color: #656e77;
+        }
+  
+        .delete-btn {
+          position: absolute;
+          top: 5px;
+          right: 5px;
+          background-color: #656e77;
+          color: #fff;
+          border: none;
+          padding: 5px 10px;
+          cursor: pointer;
+          border-radius: 5px;
+          transition: background-color 0.3s ease-in-out;
+        }
+  
+        .delete-btn:hover {
+          background-color: #cad4df;
+        }
+  
+        #quality-btn {
+          margin-top: 10px;
+          padding: 12px 18px;
+          font-size: 14px;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          transition: background-color 0.3s ease-in-out;
+        }
+  
+        #quality-btn:hover {
+          background-color: #656e77;
+          color: #fff;
+        }
+  
+        .quality-content {
+          display: none;
+          position: absolute;
+          background-color: #3b373b;
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+          z-index: 1;
+        }
+  
+        .quality-content a {
+          color: #fff;
+          padding: 12px 16px;
+          display: block;
+        }
+  
+        .quality-content a:hover {
+          background-color: #656e77;
+        }
+  
+        .quality-container {
+          position: relative;
+          display: inline-block;
+        }
+  
+        .quality-container:hover .quality-content {
+          display: block;
+        }
+  
+        .checkbox-below-image {
+          position: absolute;
+          bottom: 5px;
+          left: 50%;
+          transform: translateX(-50%);
+          text-align: center;
+          width: 100%;
+        }
+  
+        .checkbox-below-image input {
+          margin-right: 5px;
+        }
+        .duration-input {
+          padding: 8px;
+          border: 1px solid #656e77;
+          border-radius: 5px;
+          width: 50px;
+          text-align: center;
+          margin-top: 5px;
+          display: inline-block;
+        }
+  
+        .duration-container {
+          margin-top: 20px;
+          text-align: center;
+          animation: fadeIn 0.5s ease-in-out;
+        }
+  
+        .duration-container input {
+          padding: 8px;
+          border: 1px solid #656e77;
+          border-radius: 5px;
+          margin-right: 5px;
+          width: 80px;
+          text-align: center;
+        }
+  
+        .duration-container label {
+          color: #656e77;
+        }
+  
+        #delete-all-btn {
+          margin-top: 20px;
+          background-color: #656e77;
+          color: #fff;
+          border: none;
+          padding: 12px 18px;
+          cursor: pointer;
+          border-radius: 5px;
+          display: none;
+          transition: background-color 0.3s ease-in-out;
+        }
+  
+        #delete-all-btn:hover {
+          background-color: #cad4df;
+        }
+  
+        #background-video-input,
+        #video-output-name,
+        #add-mp3-btn {
+          margin-top: 10px;
+          width: 70%;
+          /* Adjusted size */
+          padding: 10px;
+          /* Adjusted size */
+          box-sizing: border-box;
+          border: 1px solid #3b373b;
+          border-radius: 5px;
+          margin-bottom: 20px;
+          font-size: 14px;
+          /* Adjusted size */
+        }
+  
+        #add-mp3-btn:hover {
+          background-color: #656e77; /* Updated hover color */
+          border: 2px dashed #656e77; /* Updated border color on hover */
+          color: #fff;
+        }
+  
+        #background-video-input {
+          display: none;
+        }
+  
+        #add-mp3-btn {
+          background-color: #3b373b;
+          color: #fff;
+          cursor: pointer;
+          transition: background-color 0.3s ease-in-out;
+          font-size: 14px;
+          /* Adjusted size */
+        }
+  
+        #add-mp3-btn:hover {
+          background-color: #656e77;
+        }
+  
+        #audio-player {
+          margin-top: 20px;
+          width: 100%;
+          max-width: 400px;
+          animation: fadeIn 0.5s ease-in-out;
+        }
+        .dropdown {
+          position: relative;
+          display: inline-block;
+        }
+        
+        .dropbtn {
+          background-color: #3b373b;
+          color: #fff;
+          cursor: pointer;
+          transition: background-color 0.3s ease-in-out;
+          font-size: 14px;
+          padding: 12px 18px;
+          border: none;
+          border-radius: 5px;
+          margin-top: 10px;
+        }
+        
+        .dropbtn:hover {
+          background-color: #656e77;
+        }
+        
+        .dropdown-content {
+          display: none;
+          position: absolute;
+          background-color: #f9f9f9;
+          min-width: 160px;
+          box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+          z-index: 1;
+        }
+        
+        .dropdown-content a {
+          color: black;
+          padding: 12px 16px;
+          text-decoration: none;
+          display: block;
+        }
+        
+        .dropdown-content a:hover {
+          background-color: #f1f1f1;
+        }
+        
+        .dropdown:hover .dropdown-content {
+          display: block;
+        }
+        
+        .dropdown:hover .dropbtn {
+          background-color: #656e77;
+        }
+        
+        /* Keep dropdown-content visible when hovering over it */
+        .dropdown-content:hover {
+          display: block;
+        }
+  
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+  
+        @keyframes scaleIn {
+          from {
+            transform: scale(0.8);
+          }
+          to {
+            transform: scale(1);
+          }
+        }
+      </style>
+</head>
+<div id="header">
+    <img id="logo" src="logotransparent.png" alt="Your Logo" />
+    <h1>VisionShow</h1>
+  </div>
+<body>
+    <!-- Your existing HTML content -->
+
+    <!-- Image upload input -->
+    <input type="file" id="image-input" accept="image/*" multiple>
+    <button id="upload-button">Upload Images</button>
+
+    <!-- Your existing HTML content -->
+
+    <script>
+        // JavaScript code for handling image upload
+        document.getElementById('upload-button').addEventListener('click', async () => {
+            const input = document.getElementById('image-input');
+            const files = input.files;
+
+            const formData = new FormData();
+            for (const file of files) {
+                formData.append('image', file);
+            }
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    console.log('Images uploaded successfully!');
+                    // Optionally, you can reload the page or update the UI here
+                } else {
+                    console.error('Failed to upload images');
+                }
+            } catch (error) {
+                console.error('Error uploading images:', error);
+            }
+        });
+    </script>
+</body>
+</html>

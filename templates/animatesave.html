@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animate</title>
+    <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}"> -->
+</head>
+<style>
+    @keyframes moveSlowly {
+        from {
+            transform: translateX(0);
+        }
+
+        to {
+            transform: translateX(50vw);
+            /* Adjust as needed */
+        }
+    }
+
+    .move-out {
+        animation: moveSlowly 2s forwards;
+        /* Adjust duration as needed */
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background-color: #cdecff;
+
+        /* Light gray background */
+    }
+
+    nav {
+        background-color: #002d67;
+        color: white;
+        padding: 2vh 3vw;
+    }
+    
+    button {
+        background-color: #6083C5;
+        color: white;
+        border: none;
+        font-size: 1vw;
+        border-radius: 2vw;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        padding: 2.5vh 5vw;
+        /* Adjust button padding */
+        margin-left: 2vw;
+        /* Add space between buttons */
+        transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+    
+    button:hover {
+        background-color: #203590;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Add a subtle shadow effect on hover */
+    }
+
+    #image-wrapper {
+        background-color: #E6E5E0;
+        margin-right: 3vw;
+        /* Slightly different color shade */
+        padding: 2vh;
+        /* Add padding */
+        border-radius: 2vw;
+        /* Rounded corners */
+        box-shadow: 0 0 1.5vh rgba(0, 0, 0, 0.6);
+        /* Shadow for the image wrapper */
+        margin-bottom: 2vh;
+        /* Add space between sections */
+    }
+
+    #audio-container {
+        background-color: #E6E5E0;
+        box-shadow: 0 0 1.5vh rgba(0, 0, 0, 0.6);
+        border-radius: 2vw;
+        /* margin-left: 2vw; */
+        margin-right: 3vw;
+        display: flex;
+        overflow-x: auto;
+        /* Enable horizontal scrolling */
+        flex-wrap: nowrap;
+        width: 90vw;
+        margin: 1vh;
+        /* Add padding */
+    }
+
+    #audio-input-container {
+        display: flex;
+        justify-content: center;
+        border: 1vh dashed #999;
+        padding: .6vh;
+        border-radius: 2vw;
+        cursor: pointer;
+        margin-bottom: 1vh;
+        width: 30vw;
+        margin-left: 30vw;
+        position: relative;
+        /* Positioning context for dropdown */
+    }
+
+    #audio-input-container:hover {
+        background-color: #E6E5E0;
+    }
+
+    .dropdown {
+        position: absolute;
+        /* Position dropdown relative to container */
+        top: 120%;
+        /* Position dropdown below container */
+        left: 0;
+        background-color: #96B8DB;
+        border: 1px solid #ccc;
+        border-radius: 1vw;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        z-index: 1;
+        /* Ensure dropdown is above other elements */
+        padding: 1vh 2vw;
+        width: 30vw;
+        display: none;
+        /* Initially hide the dropdown */
+    }
+
+    .videodrop {
+        display: none;
+        position: absolute;
+        /* top: 100%; */
+        left: 76.5vw;
+        background-color: #96B8DB;
+        border: 1px solid #ccc;
+        border-radius: 1vw;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+        z-index: 10000;
+        padding: 1vh 2vw;
+        margin-left: 3vw;
+        width: 10vw;
+    }
+
+    .dropdown-item:hover {
+        background-color: #6083C5;
+    }
+
+    #transition-wrapper {
+        background-color: #E6E5E0;
+        /* Light gray background */
+        border-radius: 2vw;
+        /* Rounded corners */
+        box-shadow: 0 0 1.5vh rgba(0, 0, 0, 0.6);
+        /* Shadow */
+        padding: 1vh;
+        /* Padding */
+        margin-bottom: 1vh;
+        /* Margin bottom */
+        text-align: center;
+        /* Center align text */
+        margin-right: 4vw;
+        width: 90vw;
+        /* Set width */
+    }
+    .container {
+        margin: 1vh auto;
+        /* Center the container vertically */
+        max-width: 90vw;
+        /* Set maximum width */
+        display: flex;
+        flex-direction: column;
+        /* Arrange children vertically */
+        align-items: flex-end;
+        /* Align children to the right */
+        background-color: #8aaee0;
+        /* White background for the container */
+        border-radius: 2vw;
+        /* Rounded corners */
+        box-shadow: 0 0 2vw rgba(0, 0, 0, 0.8);
+        /* Soft shadow */
+        padding: 3vh 3vw;
+        border: 1vh solid black;
+        /* Add padding */
+    }
+
+    #header {
+        display: flex;
+        align-items: center;
+    }
+
+    #logo {
+        height: 2.5vw;
+        margin-right: 1.5vw;
+    }
+    #logo:hover {
+    transform: scale(1.1); /* Scale up the logo slightly on hover */
+    transition: transform 0.3s ease
+}
+
+.enlarge-on-hover:hover {
+    transform: scale(1.1); /* Increase the size by 10% */
+    transition: transform 0.3s ease; /* Add a smooth transition effect */
+}
+
+
+
+    h1 {
+        margin: 0;
+    }
+
+
+    #button-container {
+        display: flex;
+        justify-content: flex-end;
+        /* Align button to the right */
+        width: 100%;
+    }
+
+    .button-box {
+        display: flex;
+        padding: 2vh;
+        /* Add padding */
+        margin-bottom: 2vh;
+        /* Add space below the button box */
+    }
+
+
+    .content {
+        max-width: 95vw;
+        /* Set maximum width */
+        margin-right: auto;
+        /* Push content to the left */
+    }
+
+    
+
+    #image-container {
+        width: 90vw;
+        justify-content: center;
+        display: flex;
+        overflow-x: auto;
+        /* Enable horizontal scrolling */
+        flex-wrap: nowrap;
+        /* Prevent wrapping */
+    }
+
+    .Audio-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin: 1vh;
+        /* Add margin between audio containers */
+    }
+
+    .image-item {
+        width: 12vw;
+        /* Set width of each image/audio */
+        height: auto;
+        /* Maintain aspect ratio */
+        margin-right: 1.5vw;
+        /* Add space between items */
+        margin-bottom: 1vh;
+        margin-top: 1vh;
+        border-radius: 2vw;
+        /* Rounded corners */
+        box-shadow: 0 0 2vh rgba(0, 0, 0, 0.6);
+        /* Shadow for each item */
+    }
+
+    .audio-item {
+        margin-right: 1.5vw;
+        width: 20vw;
+        /* Set width of each audio */
+        margin-top: 1vh;
+        border-radius: 2vw;
+        box-shadow: 0 0 2vh rgba(0, 0, 0, 0.6);
+        /* Add space between audio and images */
+    }
+
+    .audio-time {
+        margin-top: 1vh;
+        margin-bottom: 1vh;
+        margin-left: 6.5vw;
+        width: 7vw;
+        /* Set width of the time input */
+        padding: .6vh;
+        /* Add padding */
+        border-radius: 1vw;
+        /* Rounded corners */
+        text-align: center;
+        /* Center text */
+    }
+
+    
+
+    #audio-input-text {
+        margin-left: 2vw;
+        font-size: 4vh;
+        color: #E6E5E0;
+    }
+    #audio-input-text{
+        color: #230462;
+    }
+
+    .video-item {
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        width: 15vw;
+        /* Adjust the width of each video item */
+        margin-right: 1.5vw;
+        /* Add space between items */
+        margin-bottom: 1vh;
+        border-radius: 2vw;
+        /* Rounded corners */
+    }
+    .video-item:hover {
+    transform: scale(1.05); /* Scale up the video item slightly on hover */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Add a shadow effect on hover */
+}
+
+    .transition-video {
+        width: 100%;
+        /* Make the video fill the container */
+        /* height: auto; Maintain aspect ratio */
+        border-radius: 2vw;
+        /* Rounded corners */
+        box-shadow: 0 0 2vh rgba(0, 0, 0, 0.6);
+        /* Shadow for each video */
+    }
+
+    #audio-input-container:hover .dropdown {
+        display: block;
+        
+        /* Show dropdown on hover */
+    }
+
+    #video-quality-wrapper:hover .videodrop {
+        display: block;
+    }
+
+    .selected-video {
+        opacity: 1;
+        margin: auto;
+        display: block;
+    }
+
+    .videodrop div {
+        cursor: pointer;
+        padding: .5vh 0;
+        font-size: 3vh;
+        transition: background-color 0.3s;
+    }
+
+    .videodrop div:hover {
+        background-color: #6083C5;
+    }
+
+    .dropdown-item {
+        cursor: pointer;
+        padding: .5vh 0;
+        font-size: 3vh;
+    }
+
+    #transition-wrapper h2 {
+        margin-top: 0;
+        /* Remove top margin */
+    }
+
+    h2 {
+        font-size: 1.2vw;
+    }
+
+    #transition-video {
+        width: 1vw;
+        /* Set video width */
+        margin-left: 3vh;
+        /* Center video */
+        display: block;
+        /* Ensure block display */
+    }
+
+    #video-scroll-wrapper {
+        overflow-x: auto;
+        /* Enable horizontal scrolling */
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        max-width: 90%;
+        /* Allow full width scrolling */
+        margin: 0 auto;
+        /* Center the video gallery horizontally */
+        display: flex;
+    }
+
+    .container {
+        margin-top: 50px;
+    }
+
+    .videodrop {
+        display: none;
+    }
+
+    .videodrop.active {
+        display: block;
+    }
+
+    .videodrop div {
+        cursor: pointer;
+    }
+
+    .videodrop div.active {
+        font-weight: bold;
+    }
+
+    .search-bar {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            outline: none; /* Remove default focus outline */
+        }
+</style>
+
+<body>
+    <nav>
+        <div id="header">
+            <img id="logo" src="/static/img/logotransparent.png" alt="Your Logo" />
+            <h1>VisionShow</h1>
+        </div>
+    </nav>
+    <div class="container">
+        <div id="button-container">
+            <div class="button-box">
+                <div>
+                    <button id="audio-transition">Transition</button>
+                </div>
+
+                <div id="video-quality-wrapper">
+                    <button id="video-quality">Video Quality</button>
+                    <!-- Video quality dropdown -->
+                    <div class="videodrop" id="myDropdown">
+                        <input type="text" placeholder="Search.." class="search-bar" id="myInput" onkeyup="filterFunction()">
+                        <div class="quality-option" data-quality="360p">360p</div>
+                        <div class="quality-option active" data-quality="720p">720p</div>
+                        <div class="quality-option" data-quality="1080p">1080p</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <section class="content">
+        <div id="image-wrapper">
+            <div id="image-container">
+
+            </div>
+        </div>
+        <div id="audi">
+            <div id="audio-input-container">
+                <label for="audio-input" id="audio-input-text">Add Audio Files</label>
+                <input type="file" id="audio-input" accept="audio/*" multiple style="display: none;">
+                <div class="dropdown" id="audio-dropdown">
+                    <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+                    <!-- Dropdown list of audio files will be dynamically added here -->
+                </div>
+            </div>
+            <div id="audio-wrapper" style="display: none;">
+                <div id="audio-container">
+                    <!-- Audio files will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+        <div id="transition-wrapper" style="display: none;">
+            <!-- Transition section -->
+            <!-- Include the name of the transition -->
+            <h2>Transitions</h2>
+            <div id="video-scroll-wrapper">
+                <!-- Include the video with scrolling functionality -->
+                <div class="video-item" onclick="selectVideo('Normal')">
+                    <h2>Normal</h2>
+                    <div class="vid">
+                        <video class="transition-video" controls loop>
+                            <source src="/static/videos/Normal.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="video-item"onclick="selectVideo('Fade-In')">
+                    <h2>Fade-In</h2>
+                    <div class="vid">
+                        <video class="transition-video" controls loop>
+                            <source src="/static/videos/FadeIn.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="video-item" onclick="selectVideo('Fade-Out')">
+                    <h2>Fade-Out</h2>
+                    <div class="vid">
+                        <video class="transition-video" controls loop>
+                            <source src="/static/videos/fadeout.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="video-item" onclick="selectVideo('Fade-In And Fade-Out')">
+                    <h2>Fade-In And Fade-Out</h2>
+                    <div class="vid" class="">
+                        <video class="transition-video" controls loop>
+                            <source src="/static/videos/Fadeinout.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <!-- Add other video items similarly -->
+            </div>
+
+        </div>
+        </div>
+
+    </section>
+    </div>
+    <div class="button-box">
+        <div>
+            <button id="back-button" class="button" onclick="back()">Back</button>
+        </div>
+        <div id="next-button-container">
+            <button id="next-page-button" onclick="next()" class="button">Next</button>
+        </div>
+    </div>
+    <!-- <form action="/video_preview" method="post" >
+    <button type="submit" id="next-page-button">Next</button>
+</form> -->
+</body>
+<script>
+    let videoQuality = '720p';
+    let Transition = 'Normal';
+    const formData1 = new FormData();
+    // const formData2 = new FormData();
+    let index69 = 0;
+    // let index2 = 0;
+    document.addEventListener("DOMContentLoaded", function () {
+        fetchAndDisplayImages();
+        fetchAndPopulateDropdown();
+        Displayaudio()
+        // Fetch and display images and populate dropdown
+    });
+    function redirectToLogin() {
+        // Use JavaScript to redirect to the URL generated by Flask's url_for function
+        window.location.href = "{{ url_for('video_preview') }}";
+    }
+
+    function filterFunction() {
+        var input, filter, dropdown, div, txtValue;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        dropdown = document.getElementById("audio-dropdown");
+        div = dropdown.getElementsByTagName("div");
+        for (var i = 0; i < div.length; i++) {
+            txtValue = div[i].textContent || div[i].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                div[i].style.display = "";
+            } else {
+                div[i].style.display = "none";
+            }
+        }
+    }
+
+    function next() {
+        
+    }
+
+    function back() {
+        window.location.href = "{{ url_for('dropbox') }}";
+    }
+    // Function to fetch images from the server
+    function fetchAndDisplayImages() {
+        fetch('/retrieve_images')
+            .then(response => response.json())
+            .then(images => {
+                const imageContainer = document.getElementById('image-container');
+                images.forEach(imageData => {
+                    const img = document.createElement('img');
+                    img.src = `data:image/jpeg;base64,${imageData['data']}`;
+                    img.className = 'image-item';
+                    imageContainer.appendChild(img);
+                });
+            })
+            .catch(error => console.error('Error retrieving images:', error));
+        // fetchAndPopulateDropdown();
+    }
+    document.getElementById('next-page-button').addEventListener('click', function () {
+        // Send an AJAX request to save the video quality and transition
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/save_video_info', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    console.log('Video info saved successfully');
+                } else {
+                    console.error('Error saving video info:', xhr.responseText);
+                }
+            }
+        };
+        const data = {
+            'videoQuality': videoQuality,
+            'transition': Transition
+        };
+        xhr.send(JSON.stringify(data));
+        console.log(index69)
+        for (let i = 0; i < index69; i++) {
+
+            const durationInput = document.getElementById(`index1_${i}`);
+            console.log(durationInput.value);
+            if (durationInput) {
+                formData1.append('durations', durationInput.value);
+            }
+            // console.log(formData1.getAll('audio')[0]);
+        }
+        if (index69 > 0) {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/upload_audio_blob2');
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    console.log('audio info saved successfully');
+                }
+                // window.location.href = "{{ url_for('animate') }}";
+                if (xhr.status === 500) {
+                    alert('Failed to upload audio. Please try again later.');
+                }
+            };
+            xhr.send(formData1);
+        }
+        window.location.href = "{{ url_for('video_preview') }}";
+    });
+
+function Displayaudio()
+{
+    fetch('/retrieve_audios')
+        .then(response => response.json())
+        .then(audiodatalist => {
+            if(audiodatalist.length>0){
+                
+                const audioContainer = document.getElementById('audio-container');
+                const audioWrapper = document.getElementById('audio-wrapper');
+                audioWrapper.style.display = 'block';
+                audiodatalist.forEach(audiodata =>{
+                const audioElement = document.createElement('audio');
+                audioElement.src = audiodata['filepath']; // Set the src directly to the file path
+                audioElement.controls = true;
+                // console.log(audiodata['filepath'])
+                audioElement.className = 'audio-item';
+                const audioContainer = document.getElementById('audio-container');
+                const audioItem = document.createElement('div');
+                audioItem.className = 'Audio-container';
+                audioItem.appendChild(audioElement);
+                const titleText = document.createElement('p');
+                titleText.innerText = audiodata['filename']; // Assuming the song title is the filename
+                audioItem.appendChild(titleText);
+                audioItem.style.textAlign = 'center';
+                const durationInput = document.createElement("input");
+                durationInput.type = "number";
+                durationInput.value = audiodata['duration'];
+                durationInput.min=audiodata['duration'];
+                durationInput.max=audiodata['duration'];
+                audioItem.appendChild(durationInput);
+                audioContainer.appendChild(audioItem);
+                })
+            }
+            
+        })
+        .catch(error => {
+            console.error('Error fetching audios:', error);
+        });
+}
+
+
+
+    function selectVideo(videoType) {
+        // Hide all titles of videos that are not selected with fade-out effect
+        const videoTitles = document.querySelectorAll('.video-item');
+        videoTitles.forEach((title) => {
+            const transitionText = document.getElementById('transition-text');
+            const h2element = title.querySelector('h2')
+            if (h2element.textContent !== videoType) {
+                title.style.opacity = 0;
+                title.style.transition = 'opacity 2s'; // Apply transition
+                title.classList.add('move-out');
+            }
+            else {
+                // title.classList.add('move-center');
+                Transition = videoType;
+            }
+        });
+        setTimeout(function () {
+            videoTitles.forEach((title) => {
+                const h2element = title.querySelector('h2');
+                if (h2element.textContent !== videoType) {
+                    title.style.display = "none";
+                    title.classList.remove('move-out');
+                }
+                else {
+                    // title.classList.remove('move-center');
+                }
+
+            });
+            let transitionText = document.getElementById('transition-text');
+        }, 2000);
+    }
+
+    document.getElementById('audio-transition').addEventListener('click', function () {
+        const audioWrapper = document.getElementById('audi');
+        const transitionWrapper = document.getElementById('transition-wrapper');
+        if (audioWrapper.style.display === 'none') {
+            audioWrapper.style.display = 'block';
+            transitionWrapper.style.display = 'none';
+            this.textContent = 'Transition';
+        } else {
+            audioWrapper.style.display = 'none';
+            transitionWrapper.style.display = 'block';
+            const videoTitles = document.querySelectorAll('.video-item');
+            videoTitles.forEach((title) => {
+                title.style.opacity = 1;
+                title.style.display = "block";
+            });
+            // Change button text to "Audio"
+            this.textContent = 'Audio';
+        }
+    });
+    // Retrieve audio files from the server and populate the dropdown
+    function fetchAndPopulateDropdown() {
+        fetch('/get_audio_files')
+            .then(response => response.json())
+            .then(audioFiles => {
+                const dropdown = document.querySelector('.dropdown');
+                dropdown.innerHTML = '';
+                search=document.getElementById('myInput');
+                dropdown.appendChild(search);
+                audioFiles.forEach(audio => {
+                    const item = document.createElement('div');
+                    item.textContent = audio.title;
+                    item.className = 'dropdown-item';
+                    dropdown.appendChild(item);
+                });
+            })
+            .catch(error => console.error('Error fetching audio files:', error));
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+        const videoQualityButtons = document.querySelectorAll('.quality-option');
+
+        videoQualityButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                const selectedQuality = button.getAttribute('data-quality');
+                updateVideoQuality(selectedQuality);
+                updateTick(selectedQuality);
+            });
+        });
+
+
+        function updateVideoQuality(video) {
+            // You can perform further actions here if needed
+            console.log("Selected video quality:", video);
+        }
+
+        function updateTick(selectedQuality) {
+            const buttons = document.querySelectorAll('.quality-option');
+            buttons.forEach(function (button) {
+                if (button.getAttribute('data-quality') === selectedQuality) {
+                    button.classList.add('active');
+                } else {
+                    button.classList.remove('active');
+                }
+            });
+        }
+    });
+
+
+
+    // Function to add audio file data to the audio container
+    function addAudioData(audioTitle) {
+        const formData = new FormData();
+        fetch(`/play/${audioTitle}`)
+            .then(response => response.text()) // Fetch the file path as text
+            .then(filePath => {
+                const audioWrapper = document.getElementById('audio-wrapper');
+                audioWrapper.style.display = 'block';
+                const audioElement = document.createElement('audio');
+                audioElement.src = filePath; // Set the src directly to the file path
+                audioElement.controls = true;
+                audioElement.className = 'audio-item';
+                const audioContainer = document.getElementById('audio-container');
+                const audioItem = document.createElement('div');
+                audioItem.className = 'Audio-container';
+                audioItem.appendChild(audioElement);
+
+                const titleText = document.createElement('p');
+                titleText.innerText = audioTitle; // Assuming the song title is the filename
+                audioItem.appendChild(titleText);
+                audioItem.style.textAlign = 'center';
+
+                // Add input for time
+                const timeInput = document.createElement('input');
+                timeInput.type = 'number';
+                timeInput.className = 'audio-time';
+                timeInput.value = '4';
+                timeInput.min = '0';
+                timeInput.id = `index1_${index69}`;
+                index69++;
+                timeInput.step = '1'; // increment by 1 second
+                audioItem.appendChild(timeInput);
+                audioContainer.appendChild(audioItem);
+                // formData1.append('audio_title', audioTitle);
+                formData.append('audio_title', audioTitle);
+                console.log(audioTitle);
+                formData.append('duration', timeInput.value);
+            })
+            .catch(error => console.error('Error retrieving audio data:', error));
+
+        fetch(`/play2/${audioTitle}`)
+            .then(response => response.blob()) // Fetch the file as a blob
+            .then(blob => {
+                // Create a FormData object to send the blob to the server
+                formData.append('audio', blob, audioTitle); // Append the blob to the form data
+
+                // Send a POST request to upload the selected audio file
+                fetch('/upload_audio_blob', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            console.log('Audio file uploaded successfully');
+                        } else {
+                            throw new Error('Failed to upload audio file');
+                        }
+                    })
+                    .catch(error => console.error('Error uploading audio file:', error));
+            })
+            .catch(error => console.error('Error retrieving audio file:', error));
+    }
+
+
+    // Handle audio file input
+    document.getElementById('audio-input').addEventListener('change', function (event) {
+        const audioFiles = event.target.files;
+        const formData = new FormData();
+        const audioContainer = document.getElementById('audio-container');
+        const audioWrapper = document.getElementById('audio-wrapper');
+        audioWrapper.style.display = 'block';
+        Array.from(audioFiles).forEach((audioFile, index) => {
+            const audcontainer = document.createElement("div");
+            audcontainer.className = "Audio-container";
+            const audio = document.createElement('audio');
+            audio.src = URL.createObjectURL(audioFile);
+            audio.controls = true;
+            audio.className = 'audio-item';
+            audcontainer.appendChild(audio);
+            audcontainer.style.display = 'flex';
+            audcontainer.style.flexDirection = 'column';
+            audcontainer.style.justifyContent = 'center';
+
+            // Add input for time
+            const titleText = document.createElement('p');
+            titleText.innerText = audioFile.name; // Assuming the song title is the filename
+            audcontainer.appendChild(titleText);
+            audcontainer.style.textAlign = 'center';
+
+            const timeInput = document.createElement('input');
+            timeInput.type = 'number';
+            timeInput.id = `audio-time-${index}`;
+            timeInput.className = 'audio-time';
+            timeInput.value = '4';
+            timeInput.min = '0';
+            timeInput.id = `index1_${index69}`;
+            index69++;
+            timeInput.step = '1'; // increment by 1 second
+            audcontainer.appendChild(timeInput);
+
+
+            audioContainer.appendChild(audcontainer);
+            // formData.append('audio_title', audioFile.name);
+            // console.log(audioFile);
+            formData.append('audio', audioFile);
+            formData.append('duration', timeInput.value);
+        });
+        fetch('/upload_audio', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Network response was not ok.');
+            })
+            .then(data => {
+                console.log('Upload successful:', data);
+            })
+            .catch(error => {
+                console.error('Error uploading audio files:', error);
+            });
+    });
+
+    document.addEventListener('click', function (event) {
+        const target = event.target;
+        if (target.classList.contains('dropdown-item')) {
+            const audioTitle = target.textContent;
+            addAudioData(audioTitle);
+        }
+    });
+
+
+</script>
+
+</html>

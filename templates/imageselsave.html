@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image to Video Converter</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-image: url(/static/img/img2.jpeg);
+      background-repeat: no-repeat;
+      background-size: cover;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      animation: fadeInBackground 1s ease-in-out;
+    }
+
+    #header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 3.2vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding: 1.6vh;
+      z-index: 1000;
+    }
+
+    #logo {
+      width: 5vw;
+      height: auto;
+      margin-right: 2vw;
+    }
+
+    .main-container {
+      width: 80vw;
+      height: 80vh;
+      background-image: url(/static/img/img1.jpeg);
+      background-repeat: no-repeat;
+      background-size: cover;
+      border-radius: 3.6vh;
+      padding: 1vh;
+      box-shadow: 0 0 2.4vh rgba(0, 0, 0, 0.5);
+      margin-top: 6.4vh;
+      position: relative;
+    }
+
+    .duration-container {
+      margin-bottom: .2vh;
+    }
+
+    .duration-container label {
+      color: #f6ede3;
+      font-size: 3.6vh;
+    }
+
+    .duration-container input {
+      font-size: 3.2vh;
+    }
+
+    #drop-area {
+      border: 0.4vh dashed #3b373b;
+      padding: 2.0vh;
+      text-align: center;
+      font-size: 1.5vw;
+      cursor: pointer;
+      background-color: #3b373b;
+      border-radius: 1vh;
+      transition: background-color 0.3s ease-in-out;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    #drop-area:hover {
+      background-color: #656e77;
+      border: 0.4vh dashed #656e77;
+      color: #fff;
+    }
+
+    .image-container {
+      position: relative;
+      margin: 1vh;
+      animation: scaleIn 0.3s ease-in-out;
+      display: inline-block;
+      vertical-align: top;
+      width: 100%;
+    }
+
+    .image-container img {
+      width: 100%;
+      /* max-height: 100%; */
+      border-radius: 1.2vh;
+      box-shadow: 0 0 1.8vh rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .image-preview-container {
+      width: 95%;
+      overflow-x: hidden;
+      overflow-y: auto;
+      max-height: 40vh;
+      margin-top: 1.4vh;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(20vw, 1fr));
+      grid-gap: 3.2vh;
+      justify-content: center;
+      align-items: center;
+      border: 0.4vh solid #656e77;
+      border-radius: 1.8vh;
+      padding: 3.2vh;
+    }
+
+    #export-btn {
+      background-color: #3b373b;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out;
+      font-size: 2.2vh;
+      padding: 2.0vh 3.0vh;
+      border: none;
+      border-radius: 0.8vh;
+      margin-top: 1vh;
+      position: absolute;
+      bottom: 2vh;
+      right: 2vh;
+      margin-right: 3.0vh;
+    }
+
+    #export-btn:hover {
+      background-color: #656e77;
+    }
+
+    .delete-btn {
+      position: absolute;
+      top: 0.4vh;
+      right: 0.4vh;
+      background-color: #656e77;
+      color: #fff;
+      border: none;
+      padding: 0.8vh 1.4vh;
+      cursor: pointer;
+      border-radius: 0.8vh;
+      transition: background-color 0.3s ease-in-out;
+    }
+
+    .delete-btn:hover {
+      background-color: #cad4df;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="header">
+    <img id="logo" src="{{url_for('static', filename='/img/logotransparent.png')}}" alt="Your Logo" />
+    <h1>VisionShow</h1>
+  </div>
+  <div class="main-container">
+    <div class="duration-container">
+      <label style="color: #f6ede3; font-size: 3.6vh;">Set image duration (in seconds):</label>
+      <input type="number" id="image-duration" value="2" style="font-size: 3.2vh;" />
+    </div>
+
+    <br /><br /><br />
+
+    <div id="drop-area" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
+      <p style="margin: 0; color: white">Drag & Drop images here or click to browse</p>
+      <input type="file" id="fileInput" multiple style="display: none" onchange="handleFiles(this.files);" />
+    </div>
+
+    <br /><br />
+
+    <div class="image-preview-container" id="image-preview"></div>
+    <br>
+    <button id="delete-all-btn" onclick="deleteAllImages()">Delete All</button>
+  </div>
+
+  <a href="#" onclick="exportData()">
+    <button id="export-btn">Export</button>
+  </a>
+  <script>
+    let deletedImageFilenames = [];
+    function dropHandler(event) {
+      event.preventDefault();
+      document.getElementById("drop-area").style.border = "2px dashed #3498db";
+
+      const files = event.dataTransfer.files;
+      handleFiles(files);
+    }
+    function dragOverHandler(event) {
+      event.preventDefault();
+      document.getElementById("drop-area").style.border = "2px dashed #2980b9";
+    }
+    function handleFiles(files) {
+    const preview = document.getElementById("image-preview");
+    const deleteAllBtn = document.getElementById("delete-all-btn");
+    deleteAllBtn.style.display = "block";
+    for (const file of files) {
+        if (file.type.startsWith("image/")) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const imgContainer = document.createElement("div");
+                imgContainer.className = "image-container";
+                const img = document.createElement("img");
+                img.src = e.target.result;
+                const deleteBtn = document.createElement("button");
+                deleteBtn.className = "delete-btn";
+                deleteBtn.innerText = "Delete";
+                deleteBtn.addEventListener("click", function () {
+                  deletedImageFilenames.push(file.name);
+                    imgContainer.setAttribute("data-deleted", "true");
+                    imgContainer.style.display = "none"; // Hide the deleted image
+                    checkPreviewEmpty();
+                });
+                imgContainer.appendChild(img);
+                imgContainer.appendChild(deleteBtn);
+                preview.appendChild(imgContainer);
+                const index = deletedImageFilenames.indexOf(file.name);
+                if (index !== -1) {
+                    deletedImageFilenames.splice(index, 1); // Remove the filename from the delete list
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+}
+
+function exportData() {
+      const files = document.getElementById('fileInput').files;
+      const formData = new FormData();
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        // Check if the file is not in the deleted images array
+        if (!deletedImageFilenames.includes(file.name)) {
+            formData.append('files[]', file);
+        }
+    }
+    if (formData.has('files[]')) {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/upload');
+        xhr.onload = function () {
+            window.location.href = "{{ url_for('animate') }}";
+        if (xhr.status === 500) {
+            alert('Failed to upload images. Please try again later.');
+        //   alert(xhr.responseText);
+        } 
+      };
+      xhr.send(formData);
+           
+        } else {
+            alert('Please select one or more images to upload.');
+        }
+    }
+    function deleteAllImages() {
+      const preview = document.getElementById("image-preview");
+      const files = document.getElementById('fileInput');
+      files.value = '';
+      preview.innerHTML = ""; // Clear the preview container
+      checkPreviewEmpty(); // Check if the preview is empty
+    }
+    function checkPreviewEmpty() {
+      const preview = document.getElementById("image-preview");
+      const deleteAllBtn = document.getElementById("delete-all-btn");
+      deleteAllBtn.style.display = preview.children.length > 0 ? "block" : "none";
+    }
+    document.getElementById("drop-area").addEventListener("click", function () {
+      document.getElementById("fileInput").click();
+    });
+  </script>
+</body>
+
+</html>

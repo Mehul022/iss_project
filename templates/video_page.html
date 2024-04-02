@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random Video Page</title>
+  <style>
+    body {
+      font-family: "Arial", sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #3B373B;
+      color: #fff;
+    }
+
+    #video-container {
+      max-width: 800px;
+      background-color: #3B373B;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    }
+
+    video {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div id="video-container">
+    <video controls id="random-video">
+      <!-- Replace the placeholder URLs with actual video URLs -->
+      <source src="{{ url_for('static', filename='videos/pexels_videos_1072815 (1080p).mp4') }}" type="video/mp4">
+      <!-- Add more <source> elements if you have additional videos -->
+      Your browser does not support the video tag.
+    </video>
+  </div>
+
+  <script>
+    // Array of video URLs
+    const videoUrls = [
+      'pexels_videos_1072815 (1080p).mp4',
+      // Add more video URLs as needed
+    ];
+
+    // Get a random index to select a video from the array
+    const randomIndex = Math.floor(Math.random() * videoUrls.length);
+
+    // Get the video element
+    const videoElement = document.getElementById('random-video');
+
+    // Set the selected video as the source
+    videoElement.src = videoUrls[randomIndex];
+
+    // Load and play the video
+    videoElement.load();
+    videoElement.play();
+  </script>
+</body>
+</html>

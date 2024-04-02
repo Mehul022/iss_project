@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Player</title>
+</head>
+<body>
+    <h1>Music Player</h1>
+    <div id="music-player">
+        <audio controls id="audio-player">
+            <source id="audio-source" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <script>
+        // Fetch music data from the server
+        fetch('/get_music')
+            .then(response => response.json())
+            .then(data => {
+                const audioPlayer = document.getElementById('audio-player');
+                const audioSource = document.getElementById('audio-source');
+                audioSource.src = `data:audio/mpeg;base64,${data.music_data}`;
+                audioPlayer.load();
+            })
+            .catch(error => console.error('Error fetching music:', error));
+    </script>
+</body>
+</html>

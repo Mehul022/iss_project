@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image to Video Converter</title>
+    <style>
+      body {
+        font-family: 'Arial', sans-serif;
+        background-color: #3b373b;
+        color: #fff;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        animation: fadeInBackground 1s ease-in-out;
+      }
+      
+      #header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        padding: 10px;
+        z-index: 1000;
+        /* Ensure it's above other elements */
+      }
+      
+      #logo {
+        width: 50px;
+        /* Adjust the width of your logo */
+        height: auto;
+        margin-right: 10px;
+      }
+      
+      #drop-area {
+        border: 2px dashed #3b373b;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        background-color: #3b373b; /* Updated background color */
+        border-radius: 10px;
+        transition: background-color 0.3s ease-in-out;
+        animation: fadeIn 1s ease-in-out;
+      }
+      
+      #drop-area:hover {
+        background-color: #656e77; /* Updated hover color */
+        border: 2px dashed #656e77; /* Updated border color on hover */
+        color: #fff;
+      }
+      
+      #image-preview {
+        margin-top: 20px;
+        display: flex;
+        overflow-x: auto; /* Enable horizontal scrolling */
+        max-width: 100%; /* Allow the div to take up the full width */
+        white-space: nowrap; /* Prevent images from wrapping to the next line */
+        animation: fadeIn 0.5s ease-in-out;
+      }
+      
+      .image-container {
+        position: relative;
+        margin: 10px;
+        animation: scaleIn 0.3s ease-in-out;
+      }
+      
+      .image-container {
+        flex: 0 0 auto; /* Prevent flex items from shrinking */
+        margin: 10px;
+        box-sizing: border-box; /* Include padding and border in the width */
+      }
+      
+      .image-container img {
+        max-width: 100%;
+        max-height: 150px; /* Set a fixed height for each image container */
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
+      }
+      
+      #export-btn {
+        background-color: #3b373b;
+        color: #fff;
+        cursor: pointer;
+        transition: background-color 0.3s ease-in-out;
+        font-size: 14px;
+        padding: 12px 18px;
+        border: none;
+        border-radius: 5px;
+        margin-top: 10px;
+      }
+      
+      #export-btn:hover {
+        background-color: #656e77;
+      }
+      
+      .delete-btn {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background-color: #656e77;
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s ease-in-out;
+      }
+      
+      .delete-btn:hover {
+        background-color: #cad4df;
+      }
+      
+      #quality-btn {
+        margin-top: 10px;
+        padding: 12px 18px;
+        font-size: 14px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease-in-out;
+      }
+      
+      #quality-btn:hover {
+        background-color: #656e77;
+        color: #fff;
+      }
+      
+      .quality-content {
+        display: none;
+        position: absolute;
+        background-color: #3b373b;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+      }
+      
+      .quality-content a {
+        color: #fff;
+        padding: 12px 16px;
+        display: block;
+      }
+      
+      .quality-content a:hover {
+        background-color: #656e77;
+      }
+      
+      .quality-container {
+        position: relative;
+        display: inline-block;
+      }
+      
+      .quality-container:hover .quality-content {
+        display: block;
+      }
+      
+      .checkbox-below-image {
+        position: absolute;
+        bottom: 5px;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+        width: 100%;
+      }
+      
+      .checkbox-below-image input {
+        margin-right: 5px;
+      }
+      .duration-input {
+        padding: 8px;
+        border: 1px solid #656e77;
+        border-radius: 5px;
+        width: 50px;
+        text-align: center;
+        margin-top: 5px;
+        display: inline-block;
+      }
+      
+      .duration-container {
+        margin-top: 20px;
+        text-align: center;
+        animation: fadeIn 0.5s ease-in-out;
+      }
+      
+      .duration-container input {
+        padding: 8px;
+        border: 1px solid #656e77;
+        border-radius: 5px;
+        margin-right: 5px;
+        width: 80px;
+        text-align: center;
+      }
+      
+      .duration-container label {
+        color: #656e77;
+      }
+      
+      #delete-all-btn {
+        margin-top: 20px;
+        background-color: #656e77;
+        color: #fff;
+        border: none;
+        padding: 12px 18px;
+        cursor: pointer;
+        border-radius: 5px;
+        display: none;
+        transition: background-color 0.3s ease-in-out;
+      }
+      
+      #delete-all-btn:hover {
+        background-color: #cad4df;
+      }
+      
+      #background-video-input,
+      #video-output-name,
+      #add-mp3-btn {
+        margin-top: 10px;
+        width: 70%;
+        /* Adjusted size */
+        padding: 10px;
+        /* Adjusted size */
+        box-sizing: border-box;
+        border: 1px solid #3b373b;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        font-size: 14px;
+        /* Adjusted size */
+      }
+      
+      #add-mp3-btn:hover {
+        background-color: #656e77; /* Updated hover color */
+        border: 2px dashed #656e77; /* Updated border color on hover */
+        color: #fff;
+      }
+      
+      #background-video-input {
+        display: none;
+      }
+      
+      #add-mp3-btn {
+        background-color: #3b373b;
+        color: #fff;
+        cursor: pointer;
+        transition: background-color 0.3s ease-in-out;
+        font-size: 14px;
+        /* Adjusted size */
+      }
+      
+      #add-mp3-btn:hover {
+        background-color: #656e77;
+      }
+      
+      #audio-player {
+        margin-top: 20px;
+        width: 100%;
+        max-width: 400px;
+        animation: fadeIn 0.5s ease-in-out;
+      }
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
+      
+      .dropbtn {
+        background-color: #3b373b;
+        color: #fff;
+        cursor: pointer;
+        transition: background-color 0.3s ease-in-out;
+        font-size: 14px;
+        padding: 12px 18px;
+        border: none;
+        border-radius: 5px;
+        margin-top: 10px;
+      }
+      
+      .dropbtn:hover {
+        background-color: #656e77;
+      }
+      
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+      }
+      
+      .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+      }
+      
+      .dropdown-content a:hover {
+        background-color: #f1f1f1;
+      }
+      
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+      
+      .dropdown:hover .dropbtn {
+        background-color: #656e77;
+      }
+      
+      /* Keep dropdown-content visible when hovering over it */
+      .dropdown-content:hover {
+        display: block;
+      }
+      
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      
+      @keyframes scaleIn {
+        from {
+          transform: scale(0.8);
+        }
+        to {
+          transform: scale(1);
+        }
+      }
+    </style>
+  </head>
+
+  <div id="header">
+    <img id="logo" src="{{url_for('static', filename='/img/logotransparent.png')}}" alt="Your Logo" />
+    <h1>VisionShow</h1>
+  </div>
+
+  <body>
+    <div class="duration-container">
+      <label style="color: #f6ede3">Set image duration (in seconds):</label>
+      <input type="number" id="image-duration" value="2" />
+    </div>
+
+    <input type="file" id="background-video-input" accept=".mp3" onchange="handleBackgroundMusic(this.files)" />
+    <input type="text" id="video-output-name" placeholder="Enter video output name" />
+
+    <div class="dropdown" id="audioDropdown">
+      <button id="add-mp3-btn" class="dropbtn" onclick="document.getElementById('background-video-input').click()" onmouseover="showDropdown()" onmouseleave="hideDropdown()">Add MP3 File</button>
+      <div class="dropdown-content" id="audioDropdownContent">
+        <!-- JavaScript will populate this dropdown with audio files from the library -->
+      </div>
+    </div>
+
+    <div class="quality-container">
+      <button id="quality-btn">Video Quality</button>
+      <div class="quality-content">
+        <a href="#">Low</a>
+        <a href="#">Medium</a>
+        <a href="#">High</a>
+      </div>
+    </div>
+
+    <div class="quality-container">
+      <button id="quality-btn">Transition Effect</button>
+      <div class="quality-content">
+        <a href="#">Fade</a>
+        <a href="#">Push</a>
+        <a href="#">Wipe</a>
+      </div>
+    </div>
+
+    <button id="delete-all-btn" onclick="deleteAll()">Delete All</button>
+
+    <audio id="audio-player" controls>Your browser does not support the audio element.</audio>
+
+    <br /><br /><br />
+
+    <div id="drop-area" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
+      <p style="margin: 0; color: white">Drag & Drop images here or click to browse</p>
+      <input type="file" id="fileInput" multiple style="display: none" onchange="handleFiles(this.files);" />
+    </div>
+
+    <br /><br />
+
+    <div class="checkbox-container">
+      <label>Select images for video:</label>
+      <div id="image-checkboxes"></div>
+    </div>
+
+    <div id="image-preview"></div>
+
+      <a href="{{ url_for('video_page') }}">
+          <button id="export-btn" onclick="exportData()">Export</button>
+      </a>
+    
+
+    <script>
+      document.getElementById('export-btn').addEventListener('click', function () {
+        const files = document.getElementById('fileInput').files
+        if (files.length > 0) {
+          uploadImages(files)
+        } else {
+          alert('Please select one or more images to upload.')
+        }
+      })
+      
+      function uploadImages(files) {
+        const formData = new FormData()
+        for (let i = 0; i < files.length; i++) {
+          formData.append('files[]', files[i])
+        }
+      
+        const xhr = new XMLHttpRequest()
+        xhr.open('POST', '/upload')
+        xhr.onload = function () {
+          if (xhr.status === 200) {
+            alert(xhr.responseText)
+          } else {
+            alert('Failed to upload images. Please try again later.')
+          }
+        }
+        xhr.send(formData)
+      }
+      async function fetchAudioFiles() {
+        const response = await fetch('/get_audio_files')
+        const audioFiles = await response.json()
+        return audioFiles
+      }
+      
+      // Function to show the dropdown with audio files
+      function showDropdown() {
+        const dropdown = document.getElementById('audioDropdownContent');
+        dropdown.innerHTML = '' ;// Clear existing content
+      
+        fetchAudioFiles()
+          .then((audioFiles) => {
+            audioFiles.forEach(file => {
+              
+              const link = document.createElement('a');
+              link.textContent = file.title;
+              link.href = file.file_path; // Add appropriate action here, e.g., loading the audio file
+              link.addEventListener('click', function () {
+                document.getElementById('background-video-input').value = file;
+                dropdown.classList.remove('show');
+              });
+      
+              dropdown.appendChild(link);
+            });
+          })
+          .catch((error) => console.error('Error fetching audio files:', error));
+      
+        dropdown.classList.add('show');
+      }
+      function dragOverHandler(event) {
+        event.preventDefault();
+        document.getElementById("drop-area").style.border =
+          "2px dashed #2980b9";
+      }
+      
+      document
+        .getElementById("quality-btn")
+        .addEventListener("click", function () {
+          document.getElementById("quality-btn").classList.toggle("active");
+        });
+      
+        function dropHandler(event) {
+          event.preventDefault();
+          document.getElementById("drop-area").style.border =
+            "2px dashed #3498db";
+  
+          const files = event.dataTransfer.files;
+          handleFiles(files);
+        }
+      
+        function handleFiles(files) {
+          const preview = document.getElementById("image-preview");
+          const deleteAllBtn = document.getElementById("delete-all-btn");
+          deleteAllBtn.style.display = "block";
+  
+          for (const file of files) {
+            if (file.type.startsWith("image/")) {
+              const reader = new FileReader();
+  
+              reader.onload = function (e) {
+                const imgContainer = document.createElement("div");
+                imgContainer.className = "image-container";
+  
+                const img = document.createElement("img");
+                img.src = e.target.result;
+  
+                // Add debugging statements
+                console.log("Image path:", e.target.result);
+  
+                const deleteBtn = document.createElement("button");
+                deleteBtn.className = "delete-btn";
+                deleteBtn.innerText = "Delete";
+                deleteBtn.addEventListener("click", function () {
+                  imgContainer.remove();
+                  updateImageCheckboxes();
+                  checkPreviewEmpty();
+                });
+  
+                imgContainer.appendChild(img);
+                imgContainer.appendChild(deleteBtn);
+  
+                // Create checkbox container
+                const checkboxContainer = document.createElement("div");
+                checkboxContainer.className = "checkbox-below-image";
+  
+                // Create checkbox
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.value = "";
+                checkboxContainer.appendChild(checkbox);
+  
+                // Create duration input
+                const durationInput = document.createElement("input");
+                durationInput.type = "number";
+                durationInput.value =
+                  document.getElementById("image-duration").value;
+                durationInput.className = "duration-input";
+                checkboxContainer.appendChild(durationInput);
+  
+                imgContainer.appendChild(checkboxContainer);
+  
+                preview.appendChild(imgContainer);
+                updateImageCheckboxes();
+              };
+  
+              reader.readAsDataURL(file);
+            }
+          }
+        }
+  
+        function updateImageCheckboxes() {
+          const checkboxesContainer = document.getElementById("image-checkboxes");
+          checkboxesContainer.innerHTML = "";
+  
+          const images = document.querySelectorAll("#image-preview img");
+          images.forEach((img, index) => {
+            //   const checkboxContainer = document.createElement("div");
+            //   checkboxContainer.className = "checkbox-below-image";
+  
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.value = index + 1; // Start indexing from 1
+            checkbox.checked = false; // Set to false to make them unselected by default
+  
+            const durationInput = document.createElement("input");
+            durationInput.type = "number";
+            durationInput.value = document.getElementById("image-duration").value;
+            durationInput.min = "1"; // Minimum duration
+            durationInput.step = "1"; // Duration step
+            durationInput.disabled = true;
+  
+            checkbox.addEventListener("change", function () {
+              durationInput.disabled = !this.checked;
+            });
+  
+            checkboxContainer.appendChild(checkbox);
+            checkboxContainer.appendChild(
+              document.createTextNode(` Image ${index + 1} Duration:`)
+            );
+            checkboxContainer.appendChild(durationInput);
+  
+            checkboxesContainer.appendChild(checkboxContainer);
+          });
+        }
+  
+        function handleBackgroundMusic(files) {
+          const backgroundMusicInput = document.getElementById(
+            "background-video-input"
+          );
+          const backgroundMusicFile = backgroundMusicInput.files[0];
+  
+          // Handle the background music file as needed, e.g., save it for later use
+          console.log("Selected background music file:", backgroundMusicFile);
+  
+          // Play the selected background music
+          document.getElementById("audio-player").src =
+            URL.createObjectURL(backgroundMusicFile);
+        }
+  
+        function deleteAll() {
+          const preview = document.getElementById("image-preview");
+          preview.innerHTML = "";
+          const checkboxesContainer = document.getElementById("image-checkboxes");
+          checkboxesContainer.innerHTML = "";
+          checkPreviewEmpty();
+  
+          // Pause and reset the audio player
+          const audioPlayer = document.getElementById("audio-player");
+          audioPlayer.pause();
+          audioPlayer.currentTime = 0;
+        }
+  
+        function checkPreviewEmpty() {
+          const preview = document.getElementById("image-preview");
+          const deleteAllBtn = document.getElementById("delete-all-btn");
+          deleteAllBtn.style.display =
+            preview.children.length > 0 ? "block" : "none";
+        }
+  
+        document
+          .getElementById("drop-area")
+          .addEventListener("click", function () {
+            document.getElementById("fileInput").click();
+          });
+  
+        function exportData() {
+          const selectedImages = [];
+          const images = document.querySelectorAll("#image-preview img");
+          images.forEach((img, index) => {
+            const checkbox = document.querySelector(
+              `#image-checkboxes input[value="${index + 1}"]`
+            );
+            const durationInput = document.querySelector(
+              `#image-checkboxes input[value="${index + 1}"] ~ input`
+            );
+  
+            const imageObj = {
+              src: img.src,
+              isSelected: checkbox.checked,
+              duration: durationInput.value,
+            };
+  
+            selectedImages.push(imageObj);
+          });
+  
+          const backgroundMusicInput = document.getElementById(
+            "background-video-input"
+          );
+          const backgroundMusicFile = backgroundMusicInput.files[0];
+          const backgroundMusicObj = {
+            src: backgroundMusicFile
+              ? URL.createObjectURL(backgroundMusicFile)
+              : null,
+          };
+  
+          console.log("Selected Images:", selectedImages);
+          console.log("Background Music:", backgroundMusicObj);
+        }
+    </script>
+  </body>
+</html>
